@@ -1,0 +1,186 @@
+<div class="main-container">
+    <div class="top-links">
+        <ul>
+            <li>
+               List Product Category 
+            </li>
+        </ul>
+    </div>
+    <section class="commonsection dashboardarea row">
+        <div class="card-group">
+            <div class="clr20"></div>
+
+            <div *ngFor="let p of productCategoryList" (click)="onClick(p.id)">
+                <div id="category{{p.id}}" *ngIf="p.visibility">
+                    <img src="../../../assets/images/icons/eye.png" alt="" id="visible{{p.id}}">
+                    <img src="{{p.imageURL}}" alt="" id="category-image{{p.id}}">
+                    <h4 id="category-name{{p.id}}"> {{p.category}}</h4>
+                </div>
+            </div>
+        <!-- Fill your code here -->
+
+            
+        </div>
+        <div class="clr20"></div>
+
+        <div class="card-group">
+            <div class="col-sm-12">
+                <div class="title mb10">Hidden Categories</div>
+            </div>
+            <div class="clr20"></div>
+
+            <div *ngFor="let p of productCategoryList" (click)="onClick(p.id)">
+                <div id="hidden-category{{p.id}}" *ngIf="p.id>3">
+                    <img src="../../../assets/images/icons/eye.png" alt="" id="invisible{{p.id}}">
+                    <img src="{{p.imageURL}}" alt="" id="hidden-category-image{{p.id}}">
+                    <h4 id="hidden-category-name{{p.id}}"> {{p.category}}</h4>
+                </div>
+            </div>
+        <!-- Fill your code here -->
+
+            
+        </div>
+        <div class="clr20"></div>
+    </section>
+    <div class="clr20"></div>
+</div>
+
+import { Component, OnInit } from '@angular/core';
+import { ProductCategory } from 'src/app/shared/models/productCategory';
+import { PRODUCTCATEGORYLIST } from 'src/app/shared/models/productCategory-mock';
+import { Router, ActivatedRoute } from '@angular/router';
+@Component({
+  selector: 'app-list-productCategory',
+  templateUrl: './list-product-category.component.html',
+  styleUrls: ['./list-product-category.component.css']
+})
+export class ListProductCategoryComponent implements OnInit {
+  productCategoryList:ProductCategory[] = PRODUCTCATEGORYLIST;
+  ngOnInit() {
+  }
+  constructor(private route :Router) { 
+  }
+  onClick(id:any){
+    this.route.navigate(['showProductCategory/',id])
+  }
+
+  // Fill your code here
+
+}
+
+<div class="main-container">
+    <div class="top-links">
+        <ul>
+            <li>
+               Show Product Category
+            </li>
+        </ul>
+    </div>
+
+    <section class="commonsection">
+        <div class="catalog-card">
+          <div>
+            <h2>{{productCategory.category}}</h2>
+            <label for="">Name</label>
+            <h5 id="category-name">{{productCategory.category}}</h5>
+            <label for="">Desription</label>
+            <p id="description">{{productCategory.description}}</p>
+            <img src="{{productCategory.imageURL}}" id="category-image" alt="">
+            <button id="back" (click)="onBack()">Back</button>
+          </div>  
+
+    <!-- Fill your code here -->
+
+            
+        </div>
+        <div class="clr20"></div>
+    </section>
+    <div class="clr20"></div>
+</div>
+
+
+
+
+
+import { Component, OnInit } from '@angular/core';
+import { ProductCategory } from 'src/app/shared/models/productCategory';
+import { ProductCategoryService } from 'src/app/shared/service/product-category.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+@Component({
+  
+  selector: 'app-show-product-category',
+  templateUrl: './show-product-category.component.html',
+  styleUrls: ['./show-product-category.component.css']
+})
+export class ShowProductCategoryComponent implements OnInit {
+
+  productCategory:ProductCategory;
+  pid:any
+  productCategoryForm:FormGroup;
+  constructor(private activatedRoute:ActivatedRoute,private route:Router,private router:Router,private service:ProductCategoryService) { 
+  }
+   ngOnInit() {
+    this.pid=this.activatedRoute.snapshot.paramMap.get("id")
+    this.productCategory=this.service.getProductCategoryById(this.pid)[0]
+   
+  }
+  onBack(){
+    this.route.navigate(["/listProductCategory"])
+  }
+  //Fill your code here
+  
+ 
+}
+
+
+
+import { Injectable } from '@angular/core';
+import { ProductCategory } from 'src/app/shared/models/productCategory';
+import { Observable, of } from 'rxjs';
+import { PRODUCTCATEGORYLIST } from 'src/app/shared/models/productCategory-mock';
+import { map } from 'rxjs/operators';
+import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductCategoryService {
+
+  productCategoryList:ProductCategory[] =PRODUCTCATEGORYLIST;
+  productCategory:ProductCategory;
+  constructor() { }
+  getProductCategory() {
+    return this.productCategory;
+  }
+
+  getProductCategoryList():Observable<ProductCategory[]>{
+    return of(this.productCategoryList)
+    //Fill your code here
+  }
+
+  getProductCategoryById(id) {
+    return this.productCategoryList.filter(p=>p.id==id)
+    //Fill your code here
+  }
+
+}
+
+
+
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { ListProductCategoryComponent } from './category/list-product-category/list-product-category.component';
+import { ShowProductCategoryComponent } from './category/show-product-category/show-product-category.component';
+
+const routes: Routes = [ 
+  {path:"",redirectTo:"listProductCategory",pathMatch:"full"},
+  {path:"listProductCategory",component:ListProductCategoryComponent},
+  {path:"showProductCategory/:id",component:ShowProductCategoryComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
