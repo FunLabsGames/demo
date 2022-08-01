@@ -1,0 +1,62 @@
+import java.sql.Connection;
+import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+
+public class AircraftDAO {
+    public ArrayList<String> listModels(String name) throws ClassNotFoundException, SQLException{
+        
+        //fill your code
+        ArrayList<String> al = new ArrayList<>();
+        Connection con =DBConnection.getConnection();
+        DBConnection connec=new DBConnection();
+		
+		Statement statement = con.createStatement();
+    
+       String q = "select model from aircraft where aircraft_manufacturer_id =(select aircraft_manufacturer_id from aircraft_manufacturer where name='"+name+"')";
+    
+        PreparedStatement ps = con.prepareStatement(q);
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            String s = rs.getString("model");
+            al.add(s);
+        }
+        return al;
+    }
+}
+
+import java.sql.Connection;
+import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+
+public class AircraftDAO {
+    public ArrayList<String> listModels(String name) throws ClassNotFoundException, SQLException{
+        
+        //fill your code
+        ArrayList<String> al = new ArrayList<>();
+        Connection con =DBConnection.getConnection();
+        DBConnection connec=new DBConnection();
+		
+		Statement statement = con.createStatement();
+    
+       String q = "select model from aircraft where aircraft_manufacturer_id =(select aircraft_manufacturer_id from aircraft_manufacturer where name='"+name+"')";
+    
+        PreparedStatement ps = con.prepareStatement(q);
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            String s = rs.getString("model");
+            al.add(s);
+        }
+        return al;
+    }
+}
+
